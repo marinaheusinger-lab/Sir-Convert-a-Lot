@@ -37,7 +37,6 @@ def cm_to_feet_inches(cm):
     feet = int(inches_total // 12)
     inches = round(inches_total % 12)
 
-    # fix rounding edge case
     if inches == 12:
         feet += 1
         inches = 0
@@ -66,7 +65,7 @@ async def on_message(message):
     content = message.content.lower().strip()
 
     # ---------------- km → miles ----------------
-    km = re.match(r"(\d+(\.\d+)?)\s*(km|kilometre|kilometers|kilometres)", content)
+    km = re.match(r"^(\d+(\.\d+)?)\s*(km|kilometre|kilometer|kilometres|kilometers)\b", content)
     if km:
         value = float(km.group(1))
         miles = value * KM_TO_MILES
@@ -74,7 +73,7 @@ async def on_message(message):
         return
 
     # ---------------- metres → feet + yards ----------------
-    m = re.match(r"(\d+(\.\d+)?)\s*(m|metre|meter|metres|meters)", content)
+    m = re.match(r"^(\d+(\.\d+)?)\s*(metre|meter|metres|meters|m)\b(?!m)", content)
     if m:
         value = float(m.group(1))
         ft = value * M_TO_FT
@@ -83,7 +82,7 @@ async def on_message(message):
         return
 
     # ---------------- cm → feet & inches ----------------
-    cm = re.match(r"(\d+(\.\d+)?)\s*(cm|centimetre|centimeter|centimetres|centimeters)", content)
+    cm = re.match(r"^(\d+(\.\d+)?)\s*(cm|centimetre|centimeter|centimetres|centimeters)\b", content)
     if cm:
         value = float(cm.group(1))
         feet, inches = cm_to_feet_inches(value)
@@ -91,7 +90,7 @@ async def on_message(message):
         return
 
     # ---------------- feet → metres ----------------
-    ft = re.match(r"(\d+(\.\d+)?)\s*(ft|foot|feet)", content)
+    ft = re.match(r"^(\d+(\.\d+)?)\s*(ft|foot|feet)\b", content)
     if ft:
         value = float(ft.group(1))
         metres = value / M_TO_FT
@@ -99,7 +98,7 @@ async def on_message(message):
         return
 
     # ---------------- yards → metres ----------------
-    yd = re.match(r"(\d+(\.\d+)?)\s*(yd|yard|yards)", content)
+    yd = re.match(r"^(\d+(\.\d+)?)\s*(yd|yard|yards)\b", content)
     if yd:
         value = float(yd.group(1))
         metres = value / M_TO_YD
@@ -107,7 +106,7 @@ async def on_message(message):
         return
 
     # ---------------- kg → lb + stone ----------------
-    kg = re.match(r"(\d+(\.\d+)?)\s*(kg|kilogram|kilograms)", content)
+    kg = re.match(r"^(\d+(\.\d+)?)\s*(kg|kilogram|kilograms)\b", content)
     if kg:
         value = float(kg.group(1))
         lb = value * KG_TO_LB
@@ -121,7 +120,7 @@ async def on_message(message):
         return
 
     # ---------------- grams → ounces ----------------
-    g = re.match(r"(\d+(\.\d+)?)\s*(g|gram|grams)", content)
+    g = re.match(r"^(\d+(\.\d+)?)\s*(g|gram|grams)\b", content)
     if g:
         value = float(g.group(1))
         oz = value * G_TO_OZ
